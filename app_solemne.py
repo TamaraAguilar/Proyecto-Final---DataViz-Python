@@ -151,9 +151,6 @@ Con respecto a la composición de género de los equipos del área de informáti
 el siguiente gráfico muestra una predominancia masculina en todos los grupos de análisis.
 
 
-- **Azul**: Representa el porcentaje de hombres
-- **Rosa**: Representa el porcentaje de mujeres
-
 Los datos corresponden al período 2022-2023.
 """)
 
