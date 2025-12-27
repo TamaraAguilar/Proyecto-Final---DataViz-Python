@@ -2,6 +2,10 @@
 
 Dashboard interactivo para visualizar datos sobre nivel de educación y género en la industria de tecnologías de información del gobierno chileno.
 
+## 🔗 Enlace
+
+- [Proyecto desplegado en Streamlit Community Cloud](https://estudio-indicadores-tecnologia-2023.streamlit.app/)
+
 ## 🚀 Requisitos Previos
 
 - Python 3.8 o superior

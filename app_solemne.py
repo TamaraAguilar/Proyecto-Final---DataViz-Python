@@ -1,12 +1,3 @@
-"""
-Proyecto Final - DataViz Python
-Lab: Construyendo Interfaces de Datos Interactivas
-Dataset: Estudio de indicadores de gobierno digital 2023
-Fuente: datos.gob.cl
-Autor: Tamara aguilar
-Fecha: Diciembre 2025
-"""
-
 import streamlit as st
 import requests
 import pandas as pd
@@ -21,7 +12,6 @@ st.set_page_config(
     page_title="Estudio de indicadores de gobierno digital 2023",
     page_icon="🖥️"
 )
-
 
 # Título principal
 st.title("🖥️ Estudio de indicadores de gobierno digital 2023: Área de informática y/o tecnología")
@@ -45,8 +35,6 @@ st.info("""
 
 
     """)
-
-
 
 # ---------------------------------------------------------------------------- #
 #                                 PETICION HTTP                                #
@@ -132,7 +120,6 @@ nombres_columnas = {
     "P2.7.7": "Otros"
 }
 
-# Renombrar las columnas
 df = df.rename(columns=nombres_columnas)
 
 # ----------------------------- Mostrar datos -------------------------------- #
@@ -145,8 +132,6 @@ st.markdown("---")
 st.subheader("Distribución de Género por Tipo de Institución")
 
 st.markdown("""
-**Análisis de brechas de género en TIC:**
-
 Con respecto a la composición de género de los equipos del área de informática y/o tecnología,
 el siguiente gráfico muestra una predominancia masculina en todos los grupos de análisis.
 
@@ -166,7 +151,7 @@ df_genero["% Hombres"] = (df_genero["Hombres"] / df_genero["Total"] * 100).round
 fig, ax = plt.subplots(figsize=(10, 6))
 plt.style.use('default')
 
-# Utilizar misma fuente de Streamlit
+# Cambiar fuente
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = ['Source Sans Pro', 'Arial', 'sans-serif']
 
@@ -209,7 +194,9 @@ st.dataframe(df_genero, use_container_width=True)
 st.subheader(" Distribución por Nivel de Formación Profesional")
 
 st.markdown("""
-Proporción de profesionales en áreas TIC según su formación académica.
+Este gráfico muestra la proporción de profesionales que trabajan en áreas de Tecnologías 
+de Información según su nivel de formación académica. Los datos reflejan la diversidad 
+educativa del personal TIC en instituciones del sector público chileno.
 """)
 
 columnas_formacion = [
@@ -231,7 +218,6 @@ porcentajes = (totales_formacion / totales_formacion.sum() * 100).round(1)
 # Crear gráfico de torta
 fig, ax = plt.subplots(figsize=(10, 8))
 plt.style.use('default')
-
 
 # Paleta de colores
 colores = [
@@ -270,11 +256,11 @@ legend = ax.legend(
     frameon=True
 )
 
-# Mostrar en Streamlit
 st.pyplot(fig)
+st.caption("Datos del año 2023. Fuente: datos.gob.cl")
 
-st.subheader("Resumen por Tipo de Institución")
 # Tabla de resumen
+st.subheader("Resumen por Tipo de Institución")
 resumen = pd.DataFrame({
     'Formación': columnas_formacion,
     'Total': totales_formacion.values,
