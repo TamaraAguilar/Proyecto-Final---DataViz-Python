@@ -19,8 +19,7 @@ import json
 # Configuración de la página
 st.set_page_config(
     page_title="Estudio de indicadores de gobierno digital 2023",
-    page_icon="🖥️",
-    layout="wide"
+    page_icon="🖥️"
 )
 
 
@@ -34,6 +33,19 @@ st.write(
     otras preguntas pertinentes con respecto al nivel de digitalización de cada institución gubernamental, el foco de interés de este
     proyecto es la :violet[brecha] :violet[de] :violet[género] y el :violet[nivel] :violet[de] :violet[escolaridad] de los trabajadores en tecnología.
     """)
+
+
+st.info("""
+    **Fuente de Datos:**
+    Portal de Datos Abiertos del Gobierno de Chile
+    
+    **Dataset:**
+    Estudio de indicadores de gobierno digital 2023
+
+    """)
+
+st.markdown("[Enlace Dataset](https://datos.gob.cl/dataset/estudio-de-indicadores-2023)")
+
 
 # ---------------------------------------------------------------------------- #
 #                                 PETICION HTTP                                #
@@ -76,21 +88,6 @@ def obtener_datos(limit=5000):
 #                              INTERFAZ STREAMLIT                              #
 # ---------------------------------------------------------------------------- #
 
-# ---------------------------------- Sidebar --------------------------------- #
-with st.sidebar:
-    # Título
-    st.header("Información del proyecto")
-    st.info("""
-    **Fuente de Datos:**
-    Portal de Datos Abiertos del Gobierno de Chile
-    
-    **Dataset:**
-    Estudio de indicadores de gobierno digital 2023
-
-    """)
-
-    st.markdown("---")
-    st.markdown("[Enlace Dataset](https://datos.gob.cl/dataset/estudio-de-indicadores-2023)")
 
 # ---------------------------------- Loader ---------------------------------- #
 with st.spinner("Cargando datos..."):
@@ -210,6 +207,82 @@ st.caption("Datos del año 2023. Fuente: datos.gob.cl")
 
 st.subheader("Resumen por Tipo de Institución")
 st.dataframe(df_genero, use_container_width=True)
+
+# ----------------------------- Gráfico de torta ----------------------------- #
+st.subheader(" Distribución por Nivel de Formación Profesional")
+
+st.markdown("""
+Proporción de profesionales en áreas TIC según su formación académica.
+""")
+
+columnas_formacion = [
+    "Técnico TIC",
+    "Técnico Otras Áreas",
+    "Profesional TIC (s/lic)",
+    "Profesional Otras (s/lic)",
+    "Universitario Ciencia/Tec",
+    "Universitario Otras Áreas",
+    "Otros"
+]
+
+# Sumar totales por tipo de formación
+totales_formacion = df[columnas_formacion].sum()
+
+# Calcular porcentajes
+porcentajes = (totales_formacion / totales_formacion.sum() * 100).round(1)
+
+# Usar estilo oscuro
+plt.style.use('dark_background')
+
+# Crear gráfico de torta
+fig, ax = plt.subplots(figsize=(10, 8))
+fig.patch.set_alpha(0.0)
+
+# Paleta de colores
+colores = [
+    '#FF6B9D',  # Rosa fuerte
+    '#C44569',  # Rosa oscuro
+    '#8B5CF6',  # Púrpura
+    '#6366F1',  # Índigo
+    '#3B82F6',  # Azul
+    '#06B6D4',  # Cyan
+    '#10B981'   # Verde
+]
+
+
+# Crear el gráfico de torta
+wedges, texts, autotexts = ax.pie(
+    totales_formacion, 
+    labels=columnas_formacion,
+    autopct='%1.1f%%',
+    startangle=90,
+    colors=colores,
+    textprops={'fontsize': 11, 'weight': 'bold'},
+    wedgeprops={'edgecolor': 'none'}
+)
+
+for autotext in autotexts:
+    autotext.set_color('black')
+    autotext.set_fontsize(10)
+
+# Leyenda
+ax.legend(wedges, columnas_formacion, 
+          title="Nivel de Formación",
+          loc="center left",
+          bbox_to_anchor=(1, 0, 0.5, 1),
+          fontsize=10)
+
+# Mostrar en Streamlit
+st.pyplot(fig, transparent=True)
+
+st.subheader("Resumen por Tipo de Institución")
+# Tabla de resumen
+resumen = pd.DataFrame({
+    'Formación': columnas_formacion,
+    'Total': totales_formacion.values,
+    'Porcentaje': [f"{p}%" for p in porcentajes.values]
+})
+st.dataframe(resumen, hide_index=True, use_container_width=True)
 
 # ---------------------------------- Footer ---------------------------------- #
 st.markdown("---")
