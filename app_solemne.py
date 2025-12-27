@@ -23,75 +23,17 @@ st.set_page_config(
     layout="wide"
 )
 
-st.markdown("""
-    <style>
-    /* Títulos principales - Rosa pastel vibrante */
-    h1 {
-        color: #ffb3d9 !important;  /* Rosa pastel medio */
-    }
-    
-    /* Subtítulos - Tonos más suaves */
-    h2 {
-        color: #ffc2e0 !important;  /* Rosa pastel claro */
-    }
-    
-    h3 {
-        color: #ffadd2 !important;  /* Rosa coral pastel */
-    }
-    
-    /* Links - Lavanda rosado */
-    a {
-        color: #e0b3ff !important;  /* Lavanda pastel */
-        text-decoration: none;
-    }
-    
-    a:hover {
-        color: #ffb3d9 !important;
-    }
-    
-    /* Sidebar con tonos cálidos oscuros */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #2a1f2e 0%, #3d2e42 100%);
-        border-right: 1px solid #ffb3d9;
-    }
-    
-    /* Headers del sidebar */
-    [data-testid="stSidebar"] h2 {
-        color: #ffc2e0 !important;
-    }
-    
-    /* Info boxes */
-    .stAlert {
-        background-color: #3d2e42 !important;
-        border-left: 3px solid #ffadd2 !important;
-        color: #ffc2e0 !important;
-    }
-    
-    /* Botones suaves */
-    .stButton > button {
-        background-color: #d97fb8;
-        color: #1e1e1e;
-        border: none;
-        border-radius: 8px;
-        font-weight: 500;
-    }
-    
-    .stButton > button:hover {
-        background-color: #ffb3d9;
-    }
-    
-    /* Dividers suaves */
-    hr {
-        border-color: #d97fb8 !important;
-        opacity: 0.3;
-    }
-    </style>
-    """, unsafe_allow_html=True)
 
 # Título principal
-st.title("Estudio de indicadores de gobierno digital 2023")
-st.markdown("**Datos sobre nivel de educación y género en la industria de tecnologías de información del gobierno**")
-st.markdown("---")
+st.title("🖥️ Estudio de indicadores de gobierno digital 2023: Área de informática y/o tecnología")
+
+st.write(
+    """
+    El presente informe rescata las preguntas relevantes sobre la demografía y composición del Área de Tecnologías de la Información.
+    En particular, sobre el género y la formación profesional de los profesionales de las TICS. Si bien el dataset contiene
+    otras preguntas pertinentes con respecto al nivel de digitalización de cada institución gubernamental, el foco de interés de este
+    proyecto es la :violet[brecha] :violet[de] :violet[género] y el :violet[nivel] :violet[de] :violet[escolaridad] de los trabajadores en tecnología.
+    """)
 
 # ---------------------------------------------------------------------------- #
 #                                 PETICION HTTP                                #
@@ -161,15 +103,6 @@ with st.spinner("Cargando datos..."):
     except Exception as e:
         st.error(f"Error: {e}")
     
-# -------------------------------- Información ------------------------------- #
-with st.expander("Información sobre el dataset seleccionado"):
-    st.markdown('''
-    :red[Streamlit] :orange[can] :green[write] :blue[text] :violet[in]
-    :gray[pretty] :rainbow[colors] and :blue-background[highlight] text.''')
-
-    st.markdown('''
-    Este dataset muestra datos sobre...''')
-
 
 # ---------------------------------------------------------------------------- #
 #                                 PROCESAR DATA                                #
@@ -205,13 +138,26 @@ nombres_columnas = {
 df = df.rename(columns=nombres_columnas)
 
 # ----------------------------- Mostrar datos -------------------------------- #
-st.subheader("📊 Vista de los datos")
+st.subheader("Vista de los datos")
 st.write(f"Total de registros: **{len(df)}**")
-st.dataframe(df, use_container_width=True, height=400)
+st.dataframe(df, use_container_width=True, height=400, hide_index=True)
 
 # ----------------------- Gráfico de barras por género ----------------------- #
 st.markdown("---")
 st.subheader("Distribución de Género por Tipo de Institución")
+
+st.markdown("""
+**Análisis de brechas de género en TIC:**
+
+Con respecto a la composición de género de los equipos del área de informática y/o tecnología,
+el siguiente gráfico muestra una predominancia masculina en todos los grupos de análisis.
+
+
+- **Azul**: Representa el porcentaje de hombres
+- **Rosa**: Representa el porcentaje de mujeres
+
+Los datos corresponden al período 2022-2023.
+""")
 
 # Agrupar por tipo de institución y sumar mujeres y hombres
 df_genero = df.groupby("Tipo Institución")[["Mujeres", "Hombres"]].sum()
@@ -260,10 +206,9 @@ ax.set_xlim(0, 100)
 ax.legend()
 
 st.pyplot(fig, transparent=True)
+st.caption("Datos del año 2023. Fuente: datos.gob.cl")
 
-plt.style.use('default')
-
-st.subheader("📈 Resumen por Tipo de Institución")
+st.subheader("Resumen por Tipo de Institución")
 st.dataframe(df_genero, use_container_width=True)
 
 # ---------------------------------- Footer ---------------------------------- #
