@@ -41,10 +41,11 @@ st.info("""
     
     **Dataset:**
     Estudio de indicadores de gobierno digital 2023
+    [[Enlace](https://datos.gob.cl/dataset/estudio-de-indicadores-2023)]
+
 
     """)
 
-st.markdown("[Enlace Dataset](https://datos.gob.cl/dataset/estudio-de-indicadores-2023)")
 
 
 # ---------------------------------------------------------------------------- #
@@ -165,17 +166,16 @@ df_genero["% Mujeres"] = (df_genero["Mujeres"] / df_genero["Total"] * 100).round
 df_genero["% Hombres"] = (df_genero["Hombres"] / df_genero["Total"] * 100).round(1)
 
 # Crear gráfico
-plt.style.use('dark_background')
 fig, ax = plt.subplots(figsize=(10, 6))
-fig.patch.set_alpha(0.0) 
+plt.style.use('default')
 
 # Utilizar misma fuente de Streamlit
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = ['Source Sans Pro', 'Arial', 'sans-serif']
 
 # Colores de barras
-color_mujeres = "#ffb3d9"  
-color_hombres = "#b3d9ff"  
+color_mujeres = "#f43f5e"  
+color_hombres = "#0ea5e9"  
 
 # Posiciones de las barras
 y_pos = range(len(df_genero))
@@ -202,7 +202,7 @@ ax.set_title('')
 ax.set_xlim(0, 100)
 ax.legend()
 
-st.pyplot(fig, transparent=True)
+st.pyplot(fig)
 st.caption("Datos del año 2023. Fuente: datos.gob.cl")
 
 st.subheader("Resumen por Tipo de Institución")
@@ -231,24 +231,21 @@ totales_formacion = df[columnas_formacion].sum()
 # Calcular porcentajes
 porcentajes = (totales_formacion / totales_formacion.sum() * 100).round(1)
 
-# Usar estilo oscuro
-plt.style.use('dark_background')
-
 # Crear gráfico de torta
 fig, ax = plt.subplots(figsize=(10, 8))
-fig.patch.set_alpha(0.0)
+plt.style.use('default')
+
 
 # Paleta de colores
 colores = [
-    '#FF6B9D',  # Rosa fuerte
-    '#C44569',  # Rosa oscuro
-    '#8B5CF6',  # Púrpura
-    '#6366F1',  # Índigo
-    '#3B82F6',  # Azul
-    '#06B6D4',  # Cyan
-    '#10B981'   # Verde
+    "#1c83e1",  # Tailwind Blue
+    "#84cc16",  # Tailwind Lime
+    "#f43f5e",  # Tailwind Rose
+    "#10b981",  # Tailwind Emerald
+    "#f59e0b",  # Tailwind Amber
+    "#2dd4bf",  # Tailwind Teal
+    "#8b5cf6",  # Tailwind Violet
 ]
-
 
 # Crear el gráfico de torta
 wedges, texts, autotexts = ax.pie(
@@ -266,14 +263,18 @@ for autotext in autotexts:
     autotext.set_fontsize(10)
 
 # Leyenda
-ax.legend(wedges, columnas_formacion, 
-          title="Nivel de Formación",
-          loc="center left",
-          bbox_to_anchor=(1, 0, 0.5, 1),
-          fontsize=10)
+legend = ax.legend(
+    wedges,
+    [f'{cat}: {val:,.0f} ({pct:.1f}%)' for cat, val, pct in zip(columnas_formacion, totales_formacion.values, porcentajes.values)],
+    title="Nivel de Formación",
+    loc="center left",
+    bbox_to_anchor=(1, 0, 0.5, 1),
+    fontsize=10,
+    frameon=True
+)
 
 # Mostrar en Streamlit
-st.pyplot(fig, transparent=True)
+st.pyplot(fig)
 
 st.subheader("Resumen por Tipo de Institución")
 # Tabla de resumen
